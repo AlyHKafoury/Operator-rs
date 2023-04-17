@@ -4,6 +4,7 @@
 ## How to use
 
 - First install rust latest rust at the time of writing "Version 1.64"
+- Make sure you have docker installed and you have access to a kubernetes cluster that can access your local docker repository eg: `Docker Desktop`
 - Run the following command to add the required rust compile target 
 ```bash
 rustup target add x86_64-unknown-linux-musl 
