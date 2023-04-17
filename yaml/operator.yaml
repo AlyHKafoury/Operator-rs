@@ -1,0 +1,63 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: workload-operator
+  name: workload-operator
+spec:
+  selector:
+    matchLabels:
+      app: workload-operator
+  template:
+    metadata:
+      labels:
+        app: workload-operator
+    spec:
+      serviceAccountName: workload-operator
+      containers:
+        - image: operator-rs:latest
+          imagePullPolicy: IfNotPresent
+          name: workload-operator
+          ports:
+          - containerPort: 3000
+            name: https
+            protocol: TCP
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: workload-operator
+  labels:
+    app: workload-operator
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: workload-operator
+rules:
+- apiGroups:
+  - ''
+  resources:
+  - pods
+  verbs: ["*"]
+- apiGroups: ["events.k8s.io"]
+  resources: ["events"]
+  verbs: ["create"]
+- apiGroups: ["example.dev"]
+  resources: ["*"]
+  verbs: ["get", "list", "watch", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: workload-operator
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: workload-operator
+subjects:
+- apiGroup: ''
+  kind: ServiceAccount
+  name: workload-operator
+  namespace: default

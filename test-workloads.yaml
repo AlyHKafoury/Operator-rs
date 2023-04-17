@@ -1,0 +1,17 @@
+apiVersion: example.dev/v1
+kind: Workload
+metadata:
+  name: w1
+  finalizers:
+    - workload.example.dev
+spec:
+  replicas: 3
+---
+apiVersion: example.dev/v1
+kind: Workload
+metadata:
+  name: w2
+  finalizers:
+    - workload.example.dev
+spec:
+  replicas: 3
